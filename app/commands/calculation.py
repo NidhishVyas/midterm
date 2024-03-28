@@ -1,6 +1,6 @@
 from decimal import Decimal
 from typing import Callable
-from calculator import Calculator
+from app.commands import Calculator
 
 
 class Calculation:

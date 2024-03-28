@@ -142,7 +142,7 @@ def perform_operation(operation):
 def calculate_and_print(a, b, operation_name):
     try:
         a_decimal, b_decimal = map(Decimal, [a, b])
-        operation_module = importlib.import_module(f"plugins.{operation_name}")
+        operation_module = importlib.import_module(f"app.plugins.{operation_name}")
         operation_func = getattr(operation_module, operation_name)
         result = operation_func(a_decimal, b_decimal)
         print(f"The result of {a} {operation_name} {b} is equal to {result}")

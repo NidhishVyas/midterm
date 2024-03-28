@@ -10,7 +10,7 @@ class Calculator:
         a: Decimal, b: Decimal, operation: Callable[[Decimal, Decimal], Decimal]
     ) -> Decimal:
         """Internal method to perform an operation."""
-        from calculator.calculation import Calculation
+        from app.commands.calculation import Calculation
 
         calculation = Calculation.create(a, b, operation)
         return calculation.perform()
@@ -19,7 +19,7 @@ class Calculator:
     def load_operation(operation_name: str) -> Callable[[Decimal, Decimal], Decimal]:
         """Load an arithmetic operation function dynamically from a plugin."""
         try:
-            plugin_module = importlib.import_module(f"plugin.{operation_name}")
+            plugin_module = importlib.import_module(f"app.plugins.{operation_name}")
             operation_func = getattr(plugin_module, operation_name)
             return operation_func
         except (ImportError, AttributeError):
