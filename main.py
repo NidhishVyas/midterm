@@ -2,8 +2,13 @@ import os
 import pkgutil
 import importlib
 import sys
+from dotenv import load_dotenv
 from decimal import Decimal
 
+def __init__(self):
+    load_dotenv()
+    self.settings = self.load_environment_variables()
+    self.settings.setdefault("ENVIRONMENT", "PRODUCTION")
 
 def main():
     operations = discover_operations()
