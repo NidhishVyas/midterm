@@ -2,28 +2,53 @@ import os
 import pkgutil
 import importlib
 import sys
-from dotenv import load_dotenv
 from decimal import Decimal
+from dotenv import load_dotenv
+import logging
+import logging.config
+
 
 def __init__(self):
+    os.makedirs("logs", exist_ok=True)
+    self.configure_logging()
     load_dotenv()
     self.settings = self.load_environment_variables()
     self.settings.setdefault("ENVIRONMENT", "PRODUCTION")
 
+
+def configure_logging():
+    log_dir = "logs"
+    os.makedirs(log_dir, exist_ok=True)
+    logging_conf_path = "logging.conf"
+    if os.path.exists(logging_conf_path):
+        logging.config.fileConfig(logging_conf_path, disable_existing_loggers=False)
+    else:
+        logging.basicConfig(
+            level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+        )
+    logging.info("Logging configured.")
+
+
 def main():
+    configure_logging()
     operations = discover_operations()
     while True:
         display_menu(operations)
         choice = input("Enter the operation name (or 'exit' to quit): ")
         if choice.lower() == "exit":
+            logging.info("Exiting...")
             break
         elif choice in operations:
-            print("here")
             perform_operation(choice)
+        else:
+            logging.error(
+                "Invalid operation name. Please select a valid operation or 'exit'."
+            )
 
 
 def load_environment_variables(self):
     settings = {key: value for key, value in os.environ.items()}
+    logging.info("Environment variables loaded.")
     return settings
 
 
@@ -34,6 +59,9 @@ def get_environment_variable(self, env_var: str = "ENVIRONMENT"):
 def load_plugins(self):
     plugins_package = "app.plugins"
     plugins_path = plugins_package.replace(".", "/")
+    if not os.path.exists(plugins_path):
+        logging.warning(f"Plugins directory '{plugins_path}' not found.")
+        return
     for _, plugin_name, is_pkg in pkgutil.iter_modules([plugins_path]):
         if is_pkg:
             try:
@@ -42,7 +70,7 @@ def load_plugins(self):
                 )
                 self.register_plugin_commands(plugin_module, plugin_name)
             except ImportError as e:
-                print(f"Error importing plugins {plugin_name}: {e}")
+                logging.error(f"Error importing plugin {plugin_name}: {e}")
 
 
 def register_plugin_commands(self, plugin_module, plugin_name):
@@ -50,29 +78,34 @@ def register_plugin_commands(self, plugin_module, plugin_name):
         item = getattr(plugin_module, item_name)
         if isinstance(item, type):
             self.command_handler.register_command(plugin_name, item())
+            logging.info(
+                f"Command '{plugin_name}' from plugin '{plugin_name}' registered."
+            )
 
 
 def start(self):
     self.load_plugins()
+    logging.info("Application started. Type 'exit' to exit.")
     try:
         while True:
             cmd_input = input(">>> ").strip()
             if cmd_input.lower() == "exit":
+                logging.info("Application exit.")
                 sys.exit(0)
             try:
                 self.command_handler.execute_command(cmd_input)
             except KeyError:
-                print(f"Unknown command: {cmd_input}")
+                logging.error(f"Unknown command: {cmd_input}")
                 sys.exit(1)
     except KeyboardInterrupt:
-        print("Application interrupted and exiting gracefully.")
+        logging.info("Application interrupted and exiting gracefully.")
         sys.exit(0)
     finally:
-        print("Application shutdown.")
+        logging.info("Application shutdown.")
 
 
 def discover_operations():
-    plugins_dir = "app/plugins"
+    plugins_dir = "plugins"
 
     operations = []
 
@@ -89,19 +122,18 @@ def display_menu(operations):
     print("\nAvailable operations:")
     for operation in operations:
         print(operation)
+    print("exit")
 
 
 def perform_operation(operation):
     try:
-        print(operation)
-        operation_module = importlib.import_module(f"app.plugins.{operation}")
+        operation_module = importlib.import_module(f"plugins.{operation}")
         operation_func = getattr(operation_module, operation)
         a = Decimal(input("Enter first number: "))
         b = Decimal(input("Enter second number: "))
         result = operation_func(a, b)
         print(f"Result of {operation}({a}, {b}) = {result}")
-    except (ImportError, AttributeError) as e:
-        print(e)
+    except (ImportError, AttributeError):
         print(f"Error: Operation '{operation}' not found or invalid")
     except Exception as e:
         print(f"An error occurred: {e}")
