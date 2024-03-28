@@ -6,6 +6,7 @@ from decimal import Decimal
 from dotenv import load_dotenv
 import logging
 import logging.config
+from app.commands.history_manger import HistoryManager
 
 
 def __init__(self):
@@ -31,6 +32,8 @@ def configure_logging():
 
 def main():
     configure_logging()
+    load_dotenv()
+    history_manager = HistoryManager()  # Create an instance of HistoryManager
     operations = discover_operations()
     while True:
         display_menu(operations)
@@ -38,8 +41,12 @@ def main():
         if choice == "exit":
             logging.info("Exiting...")
             break
+        elif choice == "history":
+            # Functionality to interact with history_manager
+            history_manager.load_history()  # Example: Load history records
+            # Implement other history-related functionality as needed
         elif choice in operations:
-            perform_operation(choice)
+            perform_operation(choice, history_manager)
         else:
             logging.error(
                 "Invalid operation name. Please select a valid operation or 'exit'."
@@ -104,7 +111,7 @@ def display_menu(operations):
     print("exit")
 
 
-def perform_operation(operation):
+def perform_operation(operation, history_manager):
     try:
         operation_module = importlib.import_module(f"app.plugins.{operation}")
         operation_func = getattr(operation_module, operation)
@@ -112,6 +119,8 @@ def perform_operation(operation):
         num2 = Decimal(input("Enter second number: "))
         result = operation_func(num1, num2)
         print(f"Result of {operation}({num1}, {num2}) = {result}")
+        # Save the operation to history
+        history_manager.add_operation(f"{num1} {operation} {num2}", result)
     except (ImportError, AttributeError):
         print(f"Error: Operation '{operation}' not found or invalid")
     except Exception as e:
