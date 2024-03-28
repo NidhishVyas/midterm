@@ -7,12 +7,12 @@ class Calculator:
 
     @staticmethod
     def _perform_operation(
-        a: Decimal, b: Decimal, operation: Callable[[Decimal, Decimal], Decimal]
+        num1: Decimal, num2: Decimal, operation: Callable[[Decimal, Decimal], Decimal]
     ) -> Decimal:
         """Internal method to perform an operation."""
         from app.commands.calculation import Calculation
 
-        calculation = Calculation.create(a, b, operation)
+        calculation = Calculation.create(num1, num2, operation)
         return calculation.perform()
 
     @staticmethod
@@ -26,21 +26,25 @@ class Calculator:
             raise ValueError(f"Operation '{operation_name}' not found or invalid")
 
     @staticmethod
-    def add(a: Decimal, b: Decimal) -> Decimal:
-        return Calculator._perform_operation(a, b, Calculator.load_operation("add"))
-
-    @staticmethod
-    def subtract(a: Decimal, b: Decimal) -> Decimal:
+    def add(num1: Decimal, num2: Decimal) -> Decimal:
         return Calculator._perform_operation(
-            a, b, Calculator.load_operation("subtract")
+            num1, num2, Calculator.load_operation("add")
         )
 
     @staticmethod
-    def multiply(a: Decimal, b: Decimal) -> Decimal:
+    def subtract(num1: Decimal, num2: Decimal) -> Decimal:
         return Calculator._perform_operation(
-            a, b, Calculator.load_operation("multiply")
+            num1, num2, Calculator.load_operation("subtract")
         )
 
     @staticmethod
-    def divide(a: Decimal, b: Decimal) -> Decimal:
-        return Calculator._perform_operation(a, b, Calculator.load_operation("divide"))
+    def multiply(num1: Decimal, num2: Decimal) -> Decimal:
+        return Calculator._perform_operation(
+            num1, num2, Calculator.load_operation("multiply")
+        )
+
+    @staticmethod
+    def divide(num1: Decimal, num2: Decimal) -> Decimal:
+        return Calculator._perform_operation(
+            num1, num2, Calculator.load_operation("divide")
+        )

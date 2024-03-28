@@ -7,7 +7,7 @@ from main import calculate_and_print
 
 
 @pytest.mark.parametrize(
-    "a, b, operation, expected",
+    "num1, num2, operation, expected",
     [
         (Decimal("2"), Decimal("2"), "add", Decimal("4")),
         (Decimal("2"), Decimal("2"), "subtract", Decimal("0")),
@@ -15,17 +15,17 @@ from main import calculate_and_print
         (Decimal("2"), Decimal("2"), "multiply", Decimal("4")),
     ],
 )
-def test_operation(a, b, operation, expected):
+def test_operation(num1, num2, operation, expected):
     """
     Test basic arithmetic operations.
 
     Parameters:
-        a (Decimal): The first operand.
-        b (Decimal): The second operand.
+        num1 (Decimal): The first operand.
+        num2 (Decimal): The second operand.
         operation (str): The operation to perform.
         expected (Decimal): The expected result.
     """
-    result = Calculator.load_operation(operation)(a, b)
+    result = Calculator.load_operation(operation)(num1, num2)
     assert result == expected, f"{operation} operation failed"
 
 
@@ -74,7 +74,7 @@ def test_load_operation_operation_not_found():
 
 
 @pytest.mark.parametrize(
-    "a, b, operation, expected",
+    "num1, num2, operation, expected",
     [
         (
             Decimal("4"),
@@ -89,30 +89,30 @@ def test_load_operation_operation_not_found():
             "An error occurred: No module named 'app.plugins.unknown'",
         ),
         (
-            "a",
+            "num1",
             Decimal("3"),
             "add",
             "An error occurred: [<class 'decimal.ConversionSyntax'>]",
         ),
         (
             Decimal("7"),
-            "b",
+            "num2",
             "subtract",
             "An error occurred: [<class 'decimal.ConversionSyntax'>]",
         ),
     ],
 )
-def test_calculate_and_print(a, b, operation, expected, capsys):
+def test_calculate_and_print(num1, num2, operation, expected, capsys):
     """
     Test the calculate_and_print function with various inputs.
 
     Parameters:
-        a (Decimal or str): The first operand.
-        b (Decimal or str): The second operand.
+        num1 (Decimal or str): The first operand.
+        num2 (Decimal or str): The second operand.
         operation (str): The operation to perform.
         expected (str): The expected output message.
         capsys: pytest fixture for capturing stdout/stderr.
     """
-    calculate_and_print(a, b, operation)
+    calculate_and_print(num1, num2, operation)
     captured = capsys.readouterr()
     assert captured.out.strip() == expected

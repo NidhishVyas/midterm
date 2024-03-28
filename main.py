@@ -129,23 +129,23 @@ def perform_operation(operation):
     try:
         operation_module = importlib.import_module(f"app.plugins.{operation}")
         operation_func = getattr(operation_module, operation)
-        a = Decimal(input("Enter first number: "))
-        b = Decimal(input("Enter second number: "))
-        result = operation_func(a, b)
-        print(f"Result of {operation}({a}, {b}) = {result}")
+        num1 = Decimal(input("Enter first number: "))
+        num2 = Decimal(input("Enter second number: "))
+        result = operation_func(num1, num2)
+        print(f"Result of {operation}({num1}, {num2}) = {result}")
     except (ImportError, AttributeError):
         print(f"Error: Operation '{operation}' not found or invalid")
     except Exception as e:
         print(f"An error occurred: {e}")
 
 
-def calculate_and_print(a, b, operation_name):
+def calculate_and_print(num1, num2, operation_name):
     try:
-        a_decimal, b_decimal = map(Decimal, [a, b])
+        a_decimal, b_decimal = map(Decimal, [num1, num2])
         operation_module = importlib.import_module(f"app.plugins.{operation_name}")
         operation_func = getattr(operation_module, operation_name)
         result = operation_func(a_decimal, b_decimal)
-        print(f"The result of {a} {operation_name} {b} is equal to {result}")
+        print(f"The result of {num1} {operation_name} {num2} is equal to {result}")
     except ValueError as e:
         print(f"Invalid input: {e}")
     except Exception as e:
