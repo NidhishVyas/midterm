@@ -105,7 +105,7 @@ def start(self):
 
 
 def discover_operations():
-    plugins_dir = "plugins"
+    plugins_dir = "app/plugins"
 
     operations = []
 
@@ -127,7 +127,7 @@ def display_menu(operations):
 
 def perform_operation(operation):
     try:
-        operation_module = importlib.import_module(f"plugins.{operation}")
+        operation_module = importlib.import_module(f"app.plugins.{operation}")
         operation_func = getattr(operation_module, operation)
         a = Decimal(input("Enter first number: "))
         b = Decimal(input("Enter second number: "))
