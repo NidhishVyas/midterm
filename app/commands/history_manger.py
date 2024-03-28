@@ -1,11 +1,15 @@
 # history_manager.py
 import pandas as pd
 import logging
+import os
+from dotenv import load_dotenv
 
 
 class HistoryManager:
-    def __init__(self):
-        self.history_file = "history.csv"
+    def __init__(self, rel_path):
+        load_dotenv()       
+        abs_history_file = os.path.join(rel_path)
+        self.history_file = abs_history_file
         self.history = self.load_history()
 
     def load_history(self):
