@@ -1,19 +1,10 @@
 from decimal import Decimal
-from typing import Callable
 import importlib
+from typing import Callable
 
 
-class Calculator:
-
-    @staticmethod
-    def _perform_operation(
-        num1: Decimal, num2: Decimal, operation: Callable[[Decimal, Decimal], Decimal]
-    ) -> Decimal:
-        """Internal method to perform an operation."""
-        from app.commands.calculation import Calculation
-
-        calculation = Calculation.create(num1, num2, operation)
-        return calculation.perform()
+class Calculation:
+    """Represents a calculation operation between two Decimal numbers."""
 
     @staticmethod
     def load_operation(operation_name: str) -> Callable[[Decimal, Decimal], Decimal]:
@@ -24,27 +15,3 @@ class Calculator:
             return operation_func
         except (ImportError, AttributeError):
             raise ValueError(f"Operation '{operation_name}' not found or invalid")
-
-    @staticmethod
-    def add(num1: Decimal, num2: Decimal) -> Decimal:
-        return Calculator._perform_operation(
-            num1, num2, Calculator.load_operation("add")
-        )
-
-    @staticmethod
-    def subtract(num1: Decimal, num2: Decimal) -> Decimal:
-        return Calculator._perform_operation(
-            num1, num2, Calculator.load_operation("subtract")
-        )
-
-    @staticmethod
-    def multiply(num1: Decimal, num2: Decimal) -> Decimal:
-        return Calculator._perform_operation(
-            num1, num2, Calculator.load_operation("multiply")
-        )
-
-    @staticmethod
-    def divide(num1: Decimal, num2: Decimal) -> Decimal:
-        return Calculator._perform_operation(
-            num1, num2, Calculator.load_operation("divide")
-        )

@@ -34,8 +34,8 @@ def main():
     operations = discover_operations()
     while True:
         display_menu(operations)
-        choice = input("Enter the operation name (or 'exit' to quit): ")
-        if choice.lower() == "exit":
+        choice = input("Enter the operation name (or 'exit' to quit): ").lower().strip()
+        if choice == "exit":
             logging.info("Exiting...")
             break
         elif choice in operations:
@@ -46,7 +46,7 @@ def main():
             )
 
 
-def load_environment_variables(self):
+def load_environment_variables():
     settings = {key: value for key, value in os.environ.items()}
     logging.info("Environment variables loaded.")
     return settings
@@ -81,27 +81,6 @@ def register_plugin_commands(self, plugin_module, plugin_name):
             logging.info(
                 f"Command '{plugin_name}' from plugin '{plugin_name}' registered."
             )
-
-
-def start(self):
-    self.load_plugins()
-    logging.info("Application started. Type 'exit' to exit.")
-    try:
-        while True:
-            cmd_input = input(">>> ").strip()
-            if cmd_input.lower() == "exit":
-                logging.info("Application exit.")
-                sys.exit(0)
-            try:
-                self.command_handler.execute_command(cmd_input)
-            except KeyError:
-                logging.error(f"Unknown command: {cmd_input}")
-                sys.exit(1)
-    except KeyboardInterrupt:
-        logging.info("Application interrupted and exiting gracefully.")
-        sys.exit(0)
-    finally:
-        logging.info("Application shutdown.")
 
 
 def discover_operations():

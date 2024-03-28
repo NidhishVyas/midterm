@@ -2,7 +2,7 @@
 
 from decimal import Decimal
 import pytest
-from app.commands import Calculator
+from app.commands import Calculation
 from main import calculate_and_print
 
 
@@ -25,7 +25,7 @@ def test_operation(num1, num2, operation, expected):
         operation (str): The operation to perform.
         expected (Decimal): The expected result.
     """
-    result = Calculator.load_operation(operation)(num1, num2)
+    result = Calculation.load_operation(operation)(num1, num2)
     assert result == expected, f"{operation} operation failed"
 
 
@@ -37,7 +37,7 @@ def test_divide_by_zero():
         ZeroDivisionError: If division by zero occurs.
     """
     with pytest.raises(ZeroDivisionError):
-        Calculator.load_operation("divide")(Decimal("10"), Decimal("0"))
+        Calculation.load_operation("divide")(Decimal("10"), Decimal("0"))
 
 
 def test_load_invalid_operation():
@@ -48,7 +48,7 @@ def test_load_invalid_operation():
         ValueError: If an invalid operation is loaded.
     """
     with pytest.raises(ValueError):
-        Calculator.load_operation("invalid_operation")
+        Calculation.load_operation("invalid_operation")
 
 
 def test_load_unknown_operation():
@@ -59,7 +59,7 @@ def test_load_unknown_operation():
         ValueError: If an unknown operation is loaded.
     """
     with pytest.raises(ValueError):
-        Calculator.load_operation("unknown_operation")
+        Calculation.load_operation("unknown_operation")
 
 
 def test_load_operation_operation_not_found():
@@ -70,7 +70,7 @@ def test_load_operation_operation_not_found():
         ValueError: If the operation is not found.
     """
     with pytest.raises(ValueError):
-        Calculator.load_operation("operation_not_found")
+        Calculation.load_operation("operation_not_found")
 
 
 @pytest.mark.parametrize(
