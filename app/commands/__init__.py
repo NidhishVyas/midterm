@@ -11,7 +11,7 @@ class Calculation:
     def load_operation(operation_name: str) -> Callable[[Decimal, Decimal], Decimal]:
         """Load an arithmetic operation function dynamically from a plugin."""
         try:
-            plugin_module = importlib.import_module(f"app.plugins.{operation_name}")
+            plugin_module = importlib.import_module(f"app.plugins.calculator.{operation_name}")
             operation_func = getattr(plugin_module, operation_name)
             return operation_func
         except (ImportError, AttributeError):

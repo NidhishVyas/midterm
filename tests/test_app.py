@@ -86,7 +86,7 @@ def test_load_operation_operation_not_found():
             Decimal("5"),
             Decimal("5"),
             "unknown",
-            "An error occurred: No module named 'app.plugins.unknown'",
+            "An error occurred: No module named 'app.plugins.calculator.unknown'",
         ),
         (
             "num1",
