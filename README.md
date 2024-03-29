@@ -23,7 +23,6 @@ This project includes a versatile calculator application that can execute basic 
    ```
 3. Activate virtual environment
    ```sh
-   cd git_python_testing_setup_homework
    source venv/bin/activate
    ```
 4. Install required dependencies:
