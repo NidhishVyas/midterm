@@ -1,22 +1,28 @@
 import pandas as pd
 
 
-def delete_history(history_file):
+def delete_history(history_file, history_manager):
     """Deletes a specific record from the history based on the index."""
     try:
+        # Load the history directly from the file for verification
         history_df = pd.read_csv(history_file)
 
+        # Get the index of the entry to delete from user input
         index = int(input("Enter the index of the entry to delete (starting from 0): "))
 
-        if index < 0 or index >= len(history_df):
-            print("Invalid index. Please enter a valid integer within the range.")
-            return
+        # Check if the provided index exists in the DataFrame
+        if index in history_df.index:
+            # Perform the deletion on the loaded DataFrame
+            updated_df = history_df.drop(index)
+            updated_df.reset_index(drop=True, inplace=True)
 
-        history_df.drop(index, inplace=True)
-        history_df.to_csv(history_file, index=True)  # Write back to the CSV file
+            # Save the updated DataFrame back to the file
+            updated_df.to_csv(history_file, index=False)
 
-        print(f"Entry at index {index} has been deleted from the history.")
-    except ValueError:
-        print("Invalid index. Please enter a valid integer.")
-    except IndexError:
-        print(f"No entry found at the specified index.")
+            print(f"Entry at index {index} has been deleted from the history.")
+        else:
+            print("Invalid index. Please enter a valid integer that's in range.")
+
+    except Exception as e:
+        # General exception handling
+        print(f"An error occurred: {e}")

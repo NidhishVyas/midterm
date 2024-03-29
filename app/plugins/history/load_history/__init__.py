@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def load_history(history_file):
+def load_history(history_file, history_manager):
     """Loads and prints the history from the specified CSV file."""
     try:
         # Load history from the CSV file
@@ -14,5 +14,3 @@ def load_history(history_file):
             print("History is empty.")
     except FileNotFoundError:
         print("History file not found.")
-    except Exception as e:
-        print(f"An error occurred while loading history: {e}")

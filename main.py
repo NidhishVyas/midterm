@@ -121,7 +121,7 @@ def perform_operation(operation, history_manager, command):
             )
             operation_func = getattr(operation_module, operation)
             # Execute the history operation
-            operation_func(os.getenv("HIST_DIREC"))
+            operation_func(os.path.abspath(os.getenv("HIST_DIREC")), history_manager)
 
         except Exception as e:
             logging.error(f"An error occurred during the history operation: {e}")

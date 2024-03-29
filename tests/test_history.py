@@ -16,8 +16,6 @@ TEST_HISTORY_FILE = "test_history.csv"
 @pytest.fixture
 def setup_history_manager():
     """Prepare HistoryManager instance with a fresh test history file."""
-    if os.path.exists(TEST_HISTORY_FILE):
-        os.remove(TEST_HISTORY_FILE)
     history_manager = HistoryManager(TEST_HISTORY_FILE)
     return history_manager
 
@@ -42,30 +40,41 @@ def test_add_operation(setup_history_manager):
     assert hm.history_df.iloc[0]["Result"] == 3
 
 
-def test_clear_history():
+def test_clear_history(setup_history_manager):
     """Test clearing the history."""
-    clear_history(TEST_HISTORY_FILE)
+    hm = setup_history_manager
+    clear_history(TEST_HISTORY_FILE, hm)
     df = pd.read_csv(TEST_HISTORY_FILE)
     assert df.empty
 
 
 @patch("builtins.input", lambda *args: "0")
-def test_delete_history():
+def test_delete_history(setup_history_manager):
     """Test deleting a history entry."""
-    # Add a record to delete
     df = pd.DataFrame({"Operation": ["1 + 2"], "Result": [3]})
-    df.to_csv(TEST_HISTORY_FILE, index=True)
-    delete_history(TEST_HISTORY_FILE)
+    df.to_csv(TEST_HISTORY_FILE, index=False)
+    delete_history(TEST_HISTORY_FILE, setup_history_manager)
     df = pd.read_csv(TEST_HISTORY_FILE)
-    assert df.empty
+    assert df.empty, "The DataFrame should be empty after the deletion operation."
+
+# @patch("builtins.input", lambda *args: "0")
+# def test_no_delete_history(setup_history_manager):
+#     """Test deleting a history entry."""
+#     # Add a record to delete
+#     df = pd.DataFrame({"Operation": ["1 + 2"], "Result": [3]})
+#     df.to_csv(TEST_HISTORY_FILE, index=True)
+#     delete_history(TEST_HISTORY_FILE)
+#     df = pd.read_csv(TEST_HISTORY_FILE)
+#     assert df.empty
 
 
-def test_load_history():
+def test_load_history(setup_history_manager):
     """Test loading and printing history."""
     # Assuming there's already a test to add operation, which ensures there is history
     # Mocking the print to capture output
+    hm = setup_history_manager
     with patch("builtins.print") as mocked_print:
-        load_history(TEST_HISTORY_FILE)
+        load_history(TEST_HISTORY_FILE, hm)
         mocked_print.assert_called_with(
             "History file not found."
         )  # Updated expectation
