@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
+
 class HistoryManager:
     def __init__(self, rel_path):
         load_dotenv()
@@ -12,11 +13,17 @@ class HistoryManager:
         abs_history_file = os.path.abspath(rel_path)
         self.history_file = abs_history_file
         # Initialize or load the DataFrame
-        if os.path.exists(self.history_file):
-            # Ensure headers are read correctly
+        try:
+            # Attempt to read the history file
             self.history_df = pd.read_csv(self.history_file)
-        else:
-            # Initialize DataFrame with column names
+        except FileNotFoundError:
+            # If the file does not exist, initialize DataFrame with column names
+            self.history_df = pd.DataFrame(columns=["Operation", "Result"])
+        except Exception as e:
+            # Handle other possible exceptions
+            print(f"An error occurred: {e}")
+            # Initialize DataFrame with default values or handle error accordingly
+            # For instance, you might want to initialize the DataFrame even if another type of error occurred
             self.history_df = pd.DataFrame(columns=["Operation", "Result"])
 
     def add_operation(self, num1, operation_type, num2, result):
@@ -25,7 +32,7 @@ class HistoryManager:
             "add": "+",
             "subtract": "-",
             "multiply": "*",
-            "divide": "/"
+            "divide": "/",
         }.get(operation_type, "?")
 
         # Format the operation string
@@ -37,8 +44,3 @@ class HistoryManager:
 
         # Save to file with headers
         self.history_df.to_csv(self.history_file, index=True, header=True)
-
-    def save_history(self):
-        # Save the current state of the DataFrame to the CSV, preserving headers
-        self.history_df.to_csv(self.history_file, index=True, header=True)
-
