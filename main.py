@@ -34,18 +34,22 @@ def main():
                 print(f"{c}. {item.capitalize()}")
                 c += 1
 
-        choice = input("Enter your choice (calc, history, exit): ").lower().strip()
+        choice = (
+            input("Enter your choice (or 'exit' to terminate the application): ")
+            .lower()
+            .strip()
+        )
         if choice == "exit":
             logging.info("Exiting...")
             break
-        elif choice == "calc":
+        elif choice == "1" or choice == "calculator":
             if command_menu(history_manager, "Calculator"):
                 break
-        elif choice == "history":
+        elif choice == "2" or choice == "history":
             if command_menu(history_manager, "History"):
                 break
         else:
-            logging.error("Invalid choice. Please enter 'calc', 'history', or 'exit'.")
+            logging.error("Invalid choice.")
 
 
 def command_menu(history_manager, command):
@@ -53,20 +57,30 @@ def command_menu(history_manager, command):
     while True:
         display_menu(operations, command)
         choice = (
-            input("Enter the operation name (or 'back' to return to the main menu): ")
+            input("Enter the operation name (or 'exit' to terminate the application): ")
             .lower()
             .strip()
         )
         if choice == "exit":
             logging.info("Exiting...")
             return True
-        elif choice == "back":
+        elif choice == "back" or choice == "0":
             return False
-        elif choice in operations:
+        try:
+            choice_index = int(choice) - 1
+            if 0 <= choice_index < len(operations):
+                choice = operations[choice_index]
+            else:
+                raise ValueError("Index out of range.")
+        except ValueError:
+            # If conversion fails or index is out of range, treat input as an operation name
+            choice = choice if choice in operations else None
+
+        if choice:
             perform_operation(choice, history_manager, command)
         else:
             logging.error(
-                "Invalid operation. Please select a valid operation or 'back'."
+                "Invalid operation. Please select a valid operation number or name."
             )
 
 
