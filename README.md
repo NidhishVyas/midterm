@@ -1,4 +1,4 @@
-# Calculator Application
+# Calculator Application - *Midterm Project*
 
 ## Introduction
 
@@ -7,42 +7,73 @@ This project houses a versatile calculator application capable of performing bas
 ## Setup Instructions
 
 ### Requirements
+
 - Python 3.8 or newer
 - Git (optional, for cloning the repository)
 
 ### Installation
+
 1. Clone the repository or download the source code:
    ```sh
-   git clone <repository-url>
+   git clone https://github.com/NidhishVyas/midterm
    ```
 2. Navigate to the project directory:
    ```sh
-   cd midterm-main
+   cd midterm
    ```
-3. Install required dependencies:
+3. Activate virtual environment
+   ```sh
+   cd git_python_testing_setup_homework
+   source venv/bin/activate
+   ```
+4. Install required dependencies:
    ```sh
    pip install -r requirements.txt
    ```
 
 ### Running the Application
+
 Execute the main script to start the application:
+
 ```sh
 python main.py
 ```
 
 ## Usage Examples
 
-### Calculator Operations
-- Add: `add 5 3` (Outputs `8`)
-- Subtract: `subtract 10 4` (Outputs `6`)
-- Multiply: `multiply 6 7` (Outputs `42`)
-- Divide: `divide 8 2` (Outputs `4`)
+Upon launching the application, you'll be presented with the Main Menu. Here's how to navigate through its features:
+
+### Main Menu
+
+- To access the calculator, type `1` or `calculator`.
+- To manage your calculation history, type `2` or `history`.
+
+### Performing Calculator Operations
+
+##### Addition:
+
+1. From the Main Menu, enter `1` or `calculator`.
+2. Choose `1` or `add`.
+3. Enter the first number, then the second number. The result will be displayed.
+
+##### Subtraction, Multiplication, Division:
+
+- Follow similar steps as for Addition, but choose the corresponding operation.
 
 ### History Management
-- Save Calculation: Automatically saved after each operation.
-- Load History: `load_history`
-- Delete Specific Entry: `delete_history <entry_id>`
-- Clear History: `clear_history`
+
+##### Clearing History:
+
+1. From the Main Menu, enter `2` or `history`.
+2. In the History Menu, choose `1` to remove all history entries.
+
+##### Deleting a Specific Entry:
+
+- Choose `2`, then follow the prompt to enter the index of the entry you wish to delete.
+
+#### Viewing History:
+
+- Choose `3` to view all past calculations.
 
 ## Architectural Decisions
 
@@ -60,6 +91,7 @@ Logging is configured via `logging.conf`, offering a flexible and centralized ap
 ## Testing
 
 Tests are written using pytest. Run the following command to execute all tests:
+
 ```sh
 pytest
 ```
