@@ -1,11 +1,10 @@
 import os
-import pkgutil
 import importlib
 from decimal import Decimal
 from dotenv import load_dotenv
 import logging
 import logging.config
-from app.commands.history_manger import HistoryManager
+from app.commands.history_manager import HistoryManager
 
 
 def configure_logging():
@@ -32,7 +31,7 @@ def main():
         for item in os.listdir(plugins_dir):
             item_path = os.path.join(plugins_dir, item)
             if os.path.isdir(item_path):
-                print(f"{c}. {item}")
+                print(f"{c}. {item.capitalize()}")
                 c += 1
 
         choice = input("Enter your choice (calc, history, exit): ").lower().strip()
@@ -64,7 +63,7 @@ def command_menu(history_manager, command):
         elif choice == "back":
             return False
         elif choice in operations:
-            perform_operation(choice, history_manager)
+            perform_operation(choice, history_manager, command)
         else:
             logging.error(
                 "Invalid operation. Please select a valid operation or 'back'."
@@ -75,34 +74,43 @@ def display_menu(operations, command):
     print(f"\n{command} Menu:")
     c = 1
     for operation in operations:
-        if command == "History":
-            operation = operation.replace("_", " ")
-            print(f"{c}. {operation}")
-        else:
-            print(f"{c}. {operation}")
+        print(f"{c}. {operation.replace('_', ' ').capitalize()}")
         c += 1
-    print("0. back")
+    print("0. Back")
 
 
-def perform_operation(operation, history_manager):
-    try:
-        operation_module = importlib.import_module(
-            f"app.plugins.calculator.{operation}"
-        )
-        operation_func = getattr(operation_module, operation)
-        num1 = Decimal(input("Enter first number: "))
-        num2 = Decimal(input("Enter second number: "))
-        result = operation_func(num1, num2)
-        print(f"Result of {operation}({num1}, {num2}) = {result}")
-        # Save the operation to history
-        operations_dict = {"add": "+", "subtract": "-", "multiply": "*", "divide": "/"}
-        history_manager.add_operation(
-            f"{num1} {operations_dict[operation]} {num2}", result
-        )
-    except (ImportError, AttributeError):
-        print(f"Error: Operation '{operation}' not found or invalid")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+def perform_operation(operation, history_manager, command):
+    if command.lower() == "calculator":
+        # Handle calculator operations
+        try:
+            # Dynamically import the module based on the operation
+            operation_module = importlib.import_module(
+                f"app.plugins.calculator.{operation}"
+            )
+            operation_func = getattr(operation_module, operation)
+            num1 = Decimal(input("Enter first number: "))
+            num2 = Decimal(input("Enter second number: "))
+            result = operation_func(num1, num2)
+            print(f"Result: {result}")
+            operation_type = operation
+            history_manager.add_operation(num1, operation_type, num2, result)
+
+        except Exception as e:
+            logging.error(f"An error occurred during the operation: {e}")
+
+    elif command.lower() == "history":
+        # Handle history operations
+        try:
+            # Dynamically import the module based on the operation
+            operation_module = importlib.import_module(
+                f"app.plugins.history.{operation}"
+            )
+            operation_func = getattr(operation_module, operation)
+            # Execute the history operation
+            operation_func(os.getenv("HIST_DIREC"))
+
+        except Exception as e:
+            logging.error(f"An error occurred during the history operation: {e}")
 
 
 def discover_operations(command):
