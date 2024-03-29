@@ -34,9 +34,7 @@ def test_initialization_with_nonexistent_file(setup_history_manager):
 
 
 def test_add_operation(setup_history_manager):
-    """
-    Test adding an operation to the history.
-    """
+    """Test adding an operation to the history."""
     hm = setup_history_manager
     hm.add_operation(1, "add", 2, 3)
     assert not hm.history_df.empty
@@ -45,9 +43,7 @@ def test_add_operation(setup_history_manager):
 
 
 def test_clear_history():
-    """
-    Test clearing the history.
-    """
+    """Test clearing the history."""
     clear_history(TEST_HISTORY_FILE)
     df = pd.read_csv(TEST_HISTORY_FILE)
     assert df.empty
@@ -55,9 +51,7 @@ def test_clear_history():
 
 @patch("builtins.input", lambda *args: "0")
 def test_delete_history():
-    """
-    Test deleting a history entry.
-    """
+    """Test deleting a history entry."""
     # Add a record to delete
     df = pd.DataFrame({"Operation": ["1 + 2"], "Result": [3]})
     df.to_csv(TEST_HISTORY_FILE, index=True)
@@ -67,9 +61,7 @@ def test_delete_history():
 
 
 def test_load_history():
-    """
-    Test loading and printing history.
-    """
+    """Test loading and printing history."""
     # Assuming there's already a test to add operation, which ensures there is history
     # Mocking the print to capture output
     with patch("builtins.print") as mocked_print:
@@ -81,9 +73,7 @@ def test_load_history():
 
 @pytest.fixture(autouse=True)
 def clean_up():
-    """
-    Clean up the test history file after each test module.
-    """
+    """Clean up the test history file after each test module."""
     yield
     if os.path.exists(TEST_HISTORY_FILE):
         os.remove(TEST_HISTORY_FILE)

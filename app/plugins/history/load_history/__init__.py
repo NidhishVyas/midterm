@@ -1,15 +1,8 @@
-# Assuming history is stored in the same global list named 'history_entries'
-# This variable should be defined in a shared location accessible by all modules.
 import pandas as pd
 
 
-history_entries = []
-
-
 def load_history(history_file):
-    """
-    Loads and prints the history from the specified CSV file.
-    """
+    """Loads and prints the history from the specified CSV file."""
     try:
         # Load history from the CSV file
         history_df = pd.read_csv(history_file)
