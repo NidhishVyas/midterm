@@ -110,6 +110,7 @@ def perform_operation(operation, history_manager, command):
             history_manager.add_operation(num1, operation_type, num2, result)
 
         except Exception as e:
+            print(e)
             logging.error(f"An error occurred during the operation: {e}")
 
     elif command.lower() == "history":
