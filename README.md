@@ -40,7 +40,7 @@ python main.py
 
 ## Video Demonstration 
 
-##### [Demo](https://drive.google.com/file/d/1DdTduJL9-FE7oSXyzc5VerbAyp2Ln3du/view?usp=sharing)
+### [Demo](https://drive.google.com/file/d/1DdTduJL9-FE7oSXyzc5VerbAyp2Ln3du/view?usp=sharing)
 
 ## Usage Examples
 
