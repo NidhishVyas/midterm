@@ -1,4 +1,4 @@
-import os
+import logging
 import pandas as pd
 
 
@@ -9,5 +9,5 @@ def clear_history(history_file, history_manager):
 
     # Save the cleared DataFrame back to the file
     history_manager.history_df.to_csv(history_manager.history_file, index=False)
-
+    logging.info("History has been cleared.")
     print("History has been cleared.")

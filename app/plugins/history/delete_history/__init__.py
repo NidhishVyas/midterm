@@ -1,3 +1,4 @@
+import logging
 import pandas as pd
 
 
@@ -18,11 +19,13 @@ def delete_history(history_file, history_manager):
 
             # Save the updated DataFrame back to the file
             updated_df.to_csv(history_file, index=False)
-
+            logging.info(f"Entry at index {index} has been deleted from the history.")
             print(f"Entry at index {index} has been deleted from the history.")
         else:
-            print("Invalid index. Please enter a valid integer that's in range.")
+            logging.info("Invalid index. Please enter a valid integer that's in range.")
+            print("Index was out of bound.")
 
     except Exception as e:
         # General exception handling
+        logging.error(f"An error occurred: {e}")
         print(f"An error occurred: {e}")
